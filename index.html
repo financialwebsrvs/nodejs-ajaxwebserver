@@ -1,0 +1,70 @@
+<html>
+
+<body>
+
+        <!--
+            ===================
+            --  Interface   --
+            ===================
+        -->
+
+        <b>Client page</b>
+        <div>
+            <input value="send ajax call" type="button" onclick="RequestAjaxFromServer()">
+        </div>
+
+
+        <div id="divResponse" style="background-color: #e6e3b8; box-shadow: 2px 2px 8px 0px black; height: 50px; text-align: center;">
+
+        </div>
+
+
+
+        <!--
+            ===================
+            --  Script   --
+            ===================
+        -->
+        <script>
+                var iTimes = 0;     // just for example ('times' that request)
+
+                function RequestAjaxFromServer(){
+                    iTimes++;
+                    myAJAXRequest("Client data: " + iTimes, "handlingServerResponsePackage");
+                }
+
+
+                function handlingServerResponsePackage(sTxt){    
+                    document.getElementById("divResponse").innerHTML = sTxt;
+                }
+
+
+                /*  
+                * AJAX request.on.server and ready.state implementation
+                * default url.service for ajax if 'ajaxservice'   (see server.js)
+                */
+                function myAJAXRequest(sData, sFunctionToExecute, sURL = "ajaxservice") {
+
+                    // Fire-up an AJAX Request
+                    var xmlhttp = new XMLHttpRequest();
+                    xmlhttp.onreadystatechange = function () {
+                        // check Server response 
+                        if (this.readyState == 4 && this.status == 200) {
+                            // call a defined.function and use it's 1st argument for data from server
+                            window[sFunctionToExecute](this.responseText);
+                        } else {
+                            // AJAX call failed
+                            //alert (.....);
+                        }
+
+                    };
+
+                    //  Use 'Post' method to handle user.data...
+                    xmlhttp.open("POST", sURL, true);
+                    xmlhttp.send(sData);
+                }
+        </script>
+
+</body>
+
+</html>
